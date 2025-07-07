@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (playPromise !== undefined) {
                 playPromise
-                    .then((_) => {
+                    .then(() => {
                         hasStarted = true;
                         console.log("Music started successfully");
                     })
@@ -20,25 +20,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Add touch event listener to the entire document
-    document.addEventListener(
-        "touchstart",
-        function (e) {
-            e.preventDefault();
-            startMusic();
-        },
-        { once: true }
-    ); // Only trigger once
-
-    // Add click event listener as fallback for non-touch devices
-    document.addEventListener(
-        "click",
-        function (e) {
-            e.preventDefault();
-            startMusic();
-        },
-        { once: true }
-    ); // Only trigger once
+    // Gắn nhiều loại sự kiện, không dùng preventDefault
+    function bindStartEvents() {
+        ["touchstart", "touchend", "click"].forEach((eventType) => {
+            document.addEventListener(eventType, startMusic, { once: true });
+        });
+    }
+    bindStartEvents();
 
     // Add event listener for when audio ends to restart it
     audio.addEventListener("ended", function () {
